@@ -22,7 +22,6 @@
 
 
 define ("GALAXY1_NAME", 'Brown Bobby');
-define ("GALAXY2_NAME", 'Fried Egg');
 
 
 define('NL', "\n");
@@ -63,7 +62,7 @@ class sql {
 
 
 
-    function sql($server, $database, $user, $password = '') {
+    function __construct($server, $database, $user, $password = '') {
 
         $this->login = array(
 
@@ -83,9 +82,9 @@ class sql {
 
     function raise_error($message = false, $number = false, $sql = '') {
 
-        if($message === false) $message = mysql_error($this->link_id);
+        if($message === false) $message = mysqli_error($this->link_id);
 
-        if($number === false) $number = mysql_errno($this->link_id);
+        if($number === false) $number = mysqli_errno($this->link_id);
 
 
 
@@ -111,7 +110,7 @@ class sql {
 
         if(!is_resource($this->link_id)) {
 
-            if(!$this->link_id = mysql_connect($this->login['server'], $this->login['user'], $this->login['password'])) {
+            if(!$this->link_id = mysqli_connect($this->login['server'], $this->login['user'], $this->login['password'])) {
 
                 return $this->raise_error('Could not connect to server '.$this->login['server'], 0);
 
@@ -119,7 +118,7 @@ class sql {
 
 
 
-            if(!@mysql_select_db($this->login['database'], $this->link_id)) {
+            if(!@mysqli_select_db($this->link_id, $this->login['database'])) {
 
                 return $this->raise_error();
 
@@ -139,7 +138,7 @@ class sql {
 
         if(is_resource($this->link_id)) {
 
-            if(!@mysql_close($this->link_id)) {
+            if(!@mysqli_close($this->link_id)) {
 
                 return $this->raise_error();
 
@@ -165,7 +164,7 @@ class sql {
 
 
 
-        if(!$this->query_id = mysql_query($query, $this->link_id)) {
+        if(!$this->query_id = mysqli_query( $this->link_id, $query)) {
 
             return $this->raise_error();
 
@@ -183,15 +182,15 @@ class sql {
 
 
 
-    function fetchrow($query_id = 0, $result_type = MYSQL_ASSOC) {
+    function fetchrow($query_id = 0, $result_type = MYSQLI_ASSOC) {
 
         if(!is_resource($query_id)) $query_id = $this->query_id;
 
 
 
-        if(!$_row = @mysql_fetch_array($query_id, $result_type)) {
+        if(!$_row = @mysqli_fetch_array($query_id, $result_type)) {
 
-            if(($_error = mysql_error()) !== '') {
+            if(($_error = mysqli_error($this->link_id)) !== '') {
 
                 return $this->raise_error($_error);
 
@@ -213,7 +212,7 @@ class sql {
 
 
 
-    function fetchrowset($query_id = 0, $result_type = MYSQL_ASSOC) {
+    function fetchrowset($query_id = 0, $result_type = MYSQLI_ASSOC) {
 
         if(!is_resource($query_id)) $query_id = $this->query_id;
 
@@ -223,7 +222,7 @@ class sql {
 
 
 
-        while($_row = @mysql_fetch_array($query_id, $result_type)) {
+        while($_row = @mysqli_fetch_array($query_id, $result_type)) {
 
             $_rowset[] = $_row;
 
@@ -233,7 +232,7 @@ class sql {
 
         if(!$_rowset) {
 
-            if(($_error = mysql_error()) !== '') {
+            if(($_error = mysqli_error()) !== '') {
 
                 return $this->raise_error();
 
@@ -255,7 +254,7 @@ class sql {
 
 
 
-    function queryrow($query, $result_type = MYSQL_ASSOC) {
+    function queryrow($query, $result_type = MYSQLI_ASSOC) {
 
         if(!$_qid = $this->query($query)) {
 
@@ -271,7 +270,7 @@ class sql {
 
 
 
-    function queryrowset($query, $result_type = MYSQL_ASSOC) {
+    function queryrowset($query, $result_type = MYSQLI_ASSOC) {
 
         if(!$_qid = $this->query($query, true)) {
 
@@ -293,7 +292,7 @@ class sql {
 
 
 
-        if(!@mysql_free_result($query_id)) {
+        if(!@mysqli_free_result($query_id)) {
 
             return $this->raise_error();
 
@@ -313,7 +312,7 @@ class sql {
 
 
 
-        $_num = @mysql_num_rows($query_id);
+        $_num = @mysqli_num_rows($query_id);
 
 
 
@@ -333,7 +332,7 @@ class sql {
 
     function affected_rows() {
 
-        $_num = @mysql_affected_rows($this->link_id);
+        $_num = @mysqli_affected_rows($this->link_id);
 
 
 
@@ -353,7 +352,7 @@ class sql {
 
     function insert_id() {
 
-        $_id = @mysql_insert_id($this->link_id);
+        $_id = @mysqli_insert_id($this->link_id);
 
 
 
@@ -387,8 +386,6 @@ $main_html = '';
 include('../game/include/global.php');
 
 $db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
-$db2 = new sql($config['server'].":".$config['port'], $config['game_database2'], $config['user'], $config['password']); // create sql-object for db-connection
-
 
 include('session.php');
 
@@ -426,10 +423,6 @@ switch($user['galaxy'])
     case 0:
         $galaxyname = '(Galassia '.GALAXY1_NAME.')';
         $db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']);
-    break;
-    case 1:
-        $galaxyname = '(Galassia '.GALAXY2_NAME.')';
-        $db = new sql($config['server'].":".$config['port'], $config['game_database2'], $config['user'], $config['password']);
     break;
 }
 
