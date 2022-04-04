@@ -39,10 +39,6 @@ include('game/include/global.php');
 include('game/include/sql.php');
 include('game/include/functions.php');
 
-$db_name = '';
-$db_user = '';
-$db_password = '';
-
 error_reporting(E_ALL);
 
 function display_message($header,$message,$bg) {
@@ -73,10 +69,8 @@ function send_mail($myname, $myemail, $contactname, $contactemail, $subject, $me
     return mail('"'.$contactname.'" <'.$contactemail.'>', $subject, $message, $headers);
 }
 
-
-$db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
-$db2 = new sql($config['server'].":".$config['port'], $config['game_database2'], $config['user'], $config['password']);
-//$db3 = new sql($config['server'].":".$config['port'], $config['game_database3'], $config['user'], $config['password']);
+$db = new sql($config['server'], $config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
+var_dump($db);
 
 $action = htmlspecialchars((!empty($_GET['a'])) ? $_GET['a'] : 'home');
 
@@ -101,7 +95,7 @@ else
 <html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title><?php echo $title_html; ?></title>
   <meta http-equiv="Content-Language" content="it">
   <meta name="description" content="<?php echo $meta_descr; ?>">

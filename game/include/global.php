@@ -22,7 +22,7 @@
 
 
 
-include_once('/home/stfc/config.inc.php');
+include_once('/var/www/vhosts/fam-hinrichsen.de/test.stfc.fam-hinrichsen.de/ui/game/include//config.inc.php');
 
 // Line break
 
