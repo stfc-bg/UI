@@ -70,7 +70,6 @@ function send_mail($myname, $myemail, $contactname, $contactemail, $subject, $me
 }
 
 $db = new sql($config['server'], $config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
-var_dump($db);
 
 $action = htmlspecialchars((!empty($_GET['a'])) ? $_GET['a'] : 'home');
 
