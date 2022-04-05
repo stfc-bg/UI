@@ -56,9 +56,7 @@ function format_filesize($value, $limes = 6, $comma = 0) {
 
   function uptime () {
     global $text;
-    $fd = fopen('/proc/uptime', 'r');
-    $ar_buf = split(' ', fgets($fd, 4096));
-    fclose($fd);
+    $ar_buf = explode(' ', strtok( exec( "cat /proc/uptime" ), "." ));
 
     $sys_ticks = trim($ar_buf[0]);
 
@@ -82,7 +80,7 @@ function format_filesize($value, $limes = 6, $comma = 0) {
 
   function loadavg () {
     if ($fd = fopen('/proc/loadavg', 'r')) {
-      $results = split(' ', fgets($fd, 4096));
+      $results = explode(' ', fgets($fd, 4096));
       fclose($fd);
     } else {
       $results = array('N.A.', 'N.A.', 'N.A.');
@@ -163,9 +161,6 @@ function format_filesize($value, $limes = 6, $comma = 0) {
     return $results;
   } 
 
-
-
-
 // loadavg
 $loadavg = loadavg();
 // uptime
@@ -188,7 +183,12 @@ $t_percent = $db->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_au
 
 for ($t=0; $t<13; $t++)
 {
-    $race['racepercent_'.$t]=round(100/($t_percent['num'])*$race['racecount_'.$t],0);
+    $racepercent = 0;
+    if($t_percent['num'] > 0)
+	{
+		$racepercent=round(100/($t_percent['num'])*$race['racecount_'.$t],0);
+	}
+    $race['racepercent_'.$t]=$racepercent;
 }
 
 for ($t=0; $t<13; $t++)
@@ -200,11 +200,14 @@ for ($t=0; $t<13; $t++)
 $p_percent = $db->queryrow('SELECT COUNT(planet_id) AS num FROM planets, user WHERE planet_owner <> 0 AND planets.planet_owner = user.user_id AND user.user_auth_level = 1');
 
 for ($t=0; $t<13; $t++)
-{
-    $planet['planetpercent_'.$t]=round(100/($p_percent['num'])*$planet['planetcount_'.$t],0);
+{    
+    $planetpercent = 0;
+    if($p_percent['num'] > 0)
+	{
+		$planetpercent=round(100/($p_percent['num'])*$planet['planetcount_'.$t],0);
+	}
+    $planet['planetpercent_'.$t]=$planetpercent;
 }
-
-
 
 // game stats
 $player_count = $db->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_active=1 AND user_auth_level=1');
@@ -215,19 +218,6 @@ $planets_ingame = $db->queryrow('SELECT COUNT(planet_id) AS num, SUM(planet_poin
 $alliance_ingame = $db->queryrow('SELECT COUNT(alliance_id) AS num FROM alliance');
 $pp_ingame = $db->queryrow('SELECT COUNT(ud_id) AS num FROM user_diplomacy WHERE accepted=1');
 $pa_ingame = $db->queryrow('SELECT COUNT(ad_id) AS num FROM alliance_diplomacy');
-
-// 2nd galaxy game stats
-$player_count2 = $db2->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_active=1 AND user_auth_level=1');
-$player_newreg2 = $db2->queryrow('SELECT new_register AS num FROM config');
-$player_online2 = $db2->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20).' AND user_auth_level=1');
-$systems_ingame2 = $db2->queryrow('SELECT COUNT(system_id) AS num FROM starsystems');
-$planets_ingame2 = $db2->queryrow('SELECT COUNT(planet_id) AS num, SUM(planet_points) AS points_sum FROM planets');
-$alliance_ingame2 = $db2->queryrow('SELECT COUNT(alliance_id) AS num FROM alliance');
-$pp_ingame2 = $db2->queryrow('SELECT COUNT(ud_id) AS num FROM user_diplomacy WHERE accepted=1');
-$pa_ingame2 = $db2->queryrow('SELECT COUNT(ad_id) AS num FROM alliance_diplomacy');
-
-
-
 
 // code
 
@@ -424,78 +414,6 @@ $main_html .= '
         </tr>
       </table>
       <br>
-
-      <span class="sub_caption">'.$locale['galaxy'].' '.GALAXY2_NAME.'</span><br><br>
-
-      <table border="0" cellpadding="2" cellspacing="2" width="270" class="border_grey">
-        <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="170" class="desc_row">'.$locale['round_start'].'</td>
-                <td width="100" class="value_row">--.--.----</td>
-              </tr>
-              <tr>
-                <td width="170" class="desc_row">'.$locale['round_end'].'</td>
-                <td width="100" class="value_row">--.--.----</td>
-              </tr>
-              <tr><td height="10"></td></tr>
-              <tr>
-                <td width="170" class="desc_row">'.$locale['view_galaxy'].'</td>
-                <td width="100" class="value_row"><a href="http://www.stfc.it/game2/maps/images/galaxy_detail.png" target=_blank><i>'.$locale['click'].'</i></a></td>
-              </tr>
-              <tr><td height="10"></td></tr>
-              <tr>
-                <td width="170" class="desc_row">'.$locale['active_players'].'</td>
-                <td width="100" class="value_row">'.$player_count2['num'].'</td>
-              </tr>
-              <tr>
-                <td class="desc_row">'.$locale['registered_today'].'</td>
-                <td class="value_row">'.$player_newreg2['num'].'</td>
-              </tr>
-              <tr>
-                <td class="desc_row">'.$locale['online_players'].'</td>
-                <td class="value_row">'.$player_online2['num'].'</td>
-              </tr>
-              <tr><td height="10"></td></tr>
-              <tr>
-                <td class="desc_row">'.$locale['players_treaties'].'</td>
-                <td class="value_row">'.$pp_ingame2['num'].'</td>
-              </tr>
-              <tr>
-                <td class="desc_row">'.$locale['founded_alliances'].'</td>
-                <td class="value_row">'.$alliance_ingame2['num'].'</td>
-              </tr>
-              <tr>
-                <td class="desc_row">'.$locale['alliances_treaties'].'</td>
-                <td class="value_row">'.$pa_ingame2['num'].'</td>
-              </tr>
-              <tr><td height="10"></td></tr>
-              <tr>
-                <td class="desc_row">'.$locale['solar_systems'].'</td>
-                <td class="value_row">'.$systems_ingame2['num'].'</td>
-              <tr>
-                <td class="desc_row">'.$locale['planets'].'</td>
-                <td class="value_row">'.$planets_ingame2['num'].'</td>
-              </tr>
-              <tr><td height="10"></td></tr>
-              <tr>
-                <td class="desc_row">'.$locale['sum_of_all_points'].'</td>
-                <td class="value_row">'.$planets_ingame2['points_sum'].'</td>
-              </tr>
-              <tr>
-                <td class="desc_row">'.$locale['points_by_player'].'</td>
-                <td class="value_row">'.round( ($planets_ingame2['points_sum'] / $player_count2['num']), 2).'</td>
-              <tr>
-                <td class="desc_row">'.$locale['points_by_planet'].'</td>
-                <td class="value_row">'.round( ($planets_ingame2['points_sum'] / $planets_ingame2['num']), 2).'</td>
-              </tr>
-              <tr><td height="10"></td></tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-
     </td>
   </tr>
 </table>

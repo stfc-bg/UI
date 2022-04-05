@@ -52,7 +52,7 @@ include('template_manager.sprache.php');
 
 // #############################################################################
 // SQL object for database access
-$db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
+$db = new sql($config['server'], $config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
 if(isset($_GET['sql_debug'])) $db->debug = true;
 
 

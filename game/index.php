@@ -53,7 +53,7 @@ $game = new game();
 // SQL object for database access
 include('include/global.php');
 include('include/sql.php');
-$db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
+$db = new sql($config['server'], $config['port'], $config['game_database'], $config['user'], $config['password']); // create sql-object for db-connection
 
 if(isset($_GET['sql_debug'])) $db->debug = true;
 
@@ -211,7 +211,7 @@ if(isset($_GET['sql_debug'])) $db->debug_info();
 // Output compression
 $gzip_contents = ob_get_contents();
 ob_end_clean();
-
+/*
 if( (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) && (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) ) {
     $start_gtime = (microtime() + time());
 
@@ -252,8 +252,8 @@ if( (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) && (strstr($_SERVER['HTTP_ACCEPT_E
         echo pack('V', $gzip_size);
     }
 }
-else {
+else {*/
     echo $gzip_contents;
-}
+//}
 
 ?>

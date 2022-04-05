@@ -1059,7 +1059,7 @@ class game {
 
 	var $uid_cache = array();
 
-	function game() {
+	function __construct() {
 		$this->TIME = time();
 
 		$this->sectors_per_quadrant     = $this->quadrant_map_split * $this->quadrant_map_split;
@@ -2076,7 +2076,6 @@ echo'
 		}
 
 		$this->player['user_planets'] = count($this->player['planets']);
-
 		$this->init_planet($active_planet);
 	}
 
@@ -2350,10 +2349,10 @@ echo'
     }
 
 	// Veraltet, besser direkter Zugriff durch world.php
-	function create_system($id_type, $id_value) {
+	function create_system($id_type, $id_value, $is_mother = 0) {
 		include_once('include/libs/world.php');
 
-		return create_system($id_type, $id_value);
+		return create_system($id_type, $id_value, $is_mother);
 	}
 
 	// Obsolete, better direct access by world.php

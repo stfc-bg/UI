@@ -35,10 +35,6 @@
 
 
 
-
-
-
-
 function display_success($galaxy,$bg) {
     global $main_html,$locale;
     $main_html .= '
@@ -254,15 +250,9 @@ $meta_descr = $locale['register_descr'];
 if (!isset($_REQUEST['galaxy']))
 {
 /* First galaxy */
-$config=$db->queryrow('SELECT * FROM config');
+$dbconfig=$db->queryrow('SELECT * FROM config');
 $playercount=$db->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_auth_level=1 AND user_active>0');
 $player_online = $db->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20));
-
-/* Second galaxy */
-$config2=$db2->queryrow('SELECT * FROM config');
-$playercount2=$db2->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_auth_level=1 AND user_active>0');
-$player_online2 = $db2->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20));
-
 
 $main_html.='
 <div class="caption">'.$locale['registration'].'</div>
@@ -277,19 +267,10 @@ $main_html.='
             <span class="sub_caption">'.GALAXY1_NAME.'</span><br>
             <a href="index.php?a=register&galaxy=0"><img src="'.GALAXY1_IMG.'" border="0" alt="'.GALAXY1_NAME.'"></a><br>
             <u>'.$locale['version'].'</u> STFC2<br>
-            <u>'.$locale['running_since'].'</u> '.round($config['tick_id']/480,0).' '.$locale['days'].'<br>
-            <u>'.$locale['available_places'].'</u> '.($config['max_player']-$playercount['num']).'/'.$config['max_player'].'<br>
+            <u>'.$locale['running_since'].'</u> '.round($dbconfig['tick_id']/480,0).' '.$locale['days'].'<br>
+            <u>'.$locale['available_places'].'</u> '.($dbconfig['max_player']-$playercount['num']).'/'.$dbconfig['max_player'].'<br>
             <u>'.$locale['online_players'].'</u> '.$player_online['num'].'<br><br>
             '.$locale['galaxy1_desc'].'<br>
-          </td>
-          <td width="350" align="center">
-            <span class="sub_caption">'.GALAXY2_NAME.'</span><br>
-            <a href="index.php?a=register&galaxy=1"><img src="'.GALAXY2_IMG.'" border="0" alt="'.GALAXY2_NAME.'"></a><br>
-            <u>'.$locale['version'].'</u> STFC2<br>
-            <u>'.$locale['running_since'].'</u> '.round($config2['tick_id']/480,0).' '.$locale['days'].'<br>
-            <u>'.$locale['available_places'].'</u> '.($config2['max_player']-$playercount2['num']).'/'.$config2['max_player'].'<br>
-            <u>'.$locale['online_players'].'</u> '.$player_online2['num'].'<br><br>
-            '.$locale['galaxy2_desc'].'<br>
           </td>
         </tr>
       </table>
@@ -323,16 +304,16 @@ switch($galaxy)
 }
 
 
-$config=$mydb->queryrow('SELECT * FROM config');
+$dbconfig=$mydb->queryrow('SELECT * FROM config');
 $playercount=$mydb->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE user_auth_level=1 AND user_active>0');
 $player_online = $mydb->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20));
 
-if ($config['register_blocked']) {
+if ($dbconfig['register_blocked']) {
     display_registration(NULL,$locale['registration_disabled'],$galaxy);
     return true;
 }
-else if ($config['max_player']<=$playercount['num']) {
-    display_registration(NULL,$locale['registration_impossible'].'<br>('.$playercount['num'].' '.$locale['of'].' '.$config['max_player'].' '.$locale['occupied_places'].')',$galaxy);
+else if ($dbconfig['max_player']<=$playercount['num']) {
+    display_registration(NULL,$locale['registration_impossible'].'<br>('.$playercount['num'].' '.$locale['of'].' '.$dbconfig['max_player'].' '.$locale['occupied_places'].')',$galaxy);
     return true;
 }
 else
@@ -566,12 +547,12 @@ if(isset($_POST['submit'])) {
     }
 
     $activation_key = md5( pow($user_id,2) );
-    $activation_link = 'http://www.stfc.it/index.php?a=activate&galaxy='.$galaxy.'&user_id='.$user_id.'&key='.$activation_key;
+    $activation_link = $config['site_url'].'/index.php?a=activate&galaxy='.$galaxy.'&user_id='.$user_id.'&key='.$activation_key;
     $mail_message  = $locale['mail_message_congrats'].' '.$_POST['user_name'].'!'.NL;
     $mail_message .= $locale['mail_message_reg1a'].' '.$galaxyname.' '.$locale['mail_message_reg1b'].NL;
     $mail_message .= $locale['mail_message_reg2'].NL.$activation_link."\n\n".$locale['mail_message_reg3'].NL;
     $mail_message .= $locale['mail_message_reg4'].NL.NL.$locale['mail_message_sig_line1'].NL;
-    $mail_message .= $locale['mail_message_sig_line2'].NL.NL.'Credits: http://www.stfc.it/index.php?a=imprint';
+    $mail_message .= $locale['mail_message_sig_line2'].NL.NL.'Credits: '.$config['site_url'].'/index.php?a=imprint';
     send_mail("STFC2 Mailer",$config['admin_email'],$_POST['user_name'],$_REQUEST['user_email'],$locale['mail_subject_reg'],$mail_message);
 
     // Update NewRegister
@@ -588,7 +569,7 @@ if(isset($_POST['submit'])) {
 
 }
 
-display_registration(NULL,'('.$locale['there_are'].' '.$playercount['num'].' '.$locale['on'].' '.$config['max_player'].' '.$locale['occupied_places'].')',$galaxy);
+display_registration(NULL,'('.$locale['there_are'].' '.$playercount['num'].' '.$locale['on'].' '.$dbconfig['max_player'].' '.$locale['occupied_places'].')',$galaxy);
 
 }
 

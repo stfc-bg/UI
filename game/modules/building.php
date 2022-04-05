@@ -650,12 +650,19 @@ if ($sub_action=='abort_build')
 }
 if ($sub_action=='main')
 {
+	if ($game->planet['min_troops_required']>0)
+	{
     // Calculate percentage of required security troops on the planet
     $troops_perc = round(100*round($game->planet['unit_1'] * 2 +
                                    $game->planet['unit_2'] * 3 +
                                    $game->planet['unit_3'] * 4 +
                                    $game->planet['unit_4'] * 4, 0) /
-                              $game->planet['min_troops_required']);
+	$game->planet['min_troops_required']);
+	}
+	else
+	{
+		$troops_perc = 100;
+	}
 
     if ($troops_perc>=70 || $game->planet['min_troops_required']==0)
         Show_Main();

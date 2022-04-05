@@ -22,7 +22,6 @@
 
 
 $player_online = $db->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20));
-$player_online2 = $db2->queryrow('SELECT COUNT(user_id) AS num FROM user WHERE last_active > '.(time() - 60 * 20));
 
 $title_html = $locale['login_title'];
 $meta_descr = $locale['login_descr'];
@@ -46,7 +45,6 @@ $main_html .= '
           <td>
             <select name="galaxy">
               <option value="./game/index.php" selected="selected">'.GALAXY1_NAME.' ['.$player_online['num'].' online]</option>
-              <option value="./game2/index.php">'.GALAXY2_NAME.' ['.$player_online2['num'].' online]</option>
             </select>
           </td>
         </tr>
