@@ -1205,7 +1205,7 @@ if($n_tplt_1 > 0) {
     }               
 }           
  else {
-    
+    $table1 = array();
 }
 
 $game->out('<table border=0 cellpadding=2 cellspacing=2 width="100%" class="style_inner"><tr><td width=200><span class="sub_caption2">'.constant($game->sprache("TEXT51")).'</span></td><td width=175><span class="sub_caption2">'.constant($game->sprache("TEXT52")).'</span></td><td width=120><span class="sub_caption2">'.constant($game->sprache("TEXT53")).'</span></td></tr>');
@@ -1298,7 +1298,7 @@ if($n_tplt_2 > 0) {
     }               
 }           
  else {
-    
+    $table2 = array();
 }
 
 $game->out('<table border=0 cellpadding=2 cellspacing=2 width=100% class="style_inner"><tr><td width=200><span class="sub_caption2">'.constant($game->sprache("TEXT51")).'</span></td><td width=175><span class="sub_caption2">'.constant($game->sprache("TEXT52")).'</span></td><td width=120><span class="sub_caption2">'.constant($game->sprache("TEXT53")).'</span></td></tr>');
@@ -1392,7 +1392,7 @@ if($n_tplt_3 > 0) {
     }               
 }           
  else {
-    
+    $table3 = array();
 }
 
 $game->out('<table border=0 cellpadding=2 cellspacing=2 width=100% class="style_inner"><tr><td width=200><span class="sub_caption2">'.constant($game->sprache("TEXT51")).'</span></td><td width=175><span class="sub_caption2">'.constant($game->sprache("TEXT52")).'</span></td><td width=120><span class="sub_caption2">'.constant($game->sprache("TEXT53")).'</span></td></tr>');

@@ -395,8 +395,17 @@ if(isset($_GET['pfleet_details'])) {
     $sql = 'SELECT * FROM planets WHERE planet_id = '.$planet_id;
 
     $planet_koords = $db->queryrow($sql);
-
-    $system=$db->queryrow('SELECT system_x, system_y FROM starsystems WHERE system_id = '.$planet_koords['system_id']);
+    
+    if(is_object($$planet_koords['system_id']))
+	{
+    $sql = 'SELECT system_x, system_y FROM starsystems WHERE system_id = '.$planet_koords['system_id'];
+	echo $sql;
+    $system=$db->queryrow($sql);
+	}
+	else
+	{
+		$system= "";
+	}
 
     // Ende lesen Homebasekoords
 

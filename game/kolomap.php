@@ -43,7 +43,7 @@ fclose($handle);
 }
 
 // create sql-object for db-connection
-$db = new sql($config['server'].":".$config['port'], $config['game_database'], $config['user'], $config['password']);
+$db = new sql($config['server'], $config['port'], $config['game_database'], $config['user'], $config['password']);
 
 // Load player parameters 
 $game = new game();

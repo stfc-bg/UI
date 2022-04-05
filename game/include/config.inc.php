@@ -17,5 +17,5 @@ define ('ERROR_LOG_FILE', '/var/www/vhosts/fam-hinrichsen.de/test.stfc.fam-hinri
 define ('ADMIN_LOG_FILE', '/var/www/vhosts/fam-hinrichsen.de/test.stfc.fam-hinrichsen.de/admin_log.htm');
 define('DEFAULT_GFX_PATH', 'https://test.stfc.fam-hinrichsen.de/graphics/stfc_gfx/');
 define('PROXY_GFX_PATH', 'https://test.stfc.fam-hinrichsen.de/graphics/stfc_gfx/');
-define('JSCRIPT_PATH', '/var/www/vhosts/fam-hinrichsen.de/test.stfc.fam-hinrichsen.de/ui/game/stgc2.js');
+define('JSCRIPT_PATH', 'https://test.stfc.fam-hinrichsen.de/ui/game/');
 ?>

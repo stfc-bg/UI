@@ -248,7 +248,8 @@ class maps {
             }
 
             $tri_a = sin( ($angle * M_PI ) / 180 ) * $radius;
-            $tri_b = math::pythagoras_hc($radius, $tri_a);
+			$math = new math();
+            $tri_b = $math->pythagoras_hc($radius, $tri_a);
 
             switch($quadrant) {
                 case 1:
